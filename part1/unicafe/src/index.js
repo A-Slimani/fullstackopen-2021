@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
+// new comment
+
 const App = () => {
   // save clicks of each button to its own state
   const [good, setGood] = useState(0);
