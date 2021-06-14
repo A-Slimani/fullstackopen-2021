@@ -1,70 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-const Header = ({ courseinfo }) => {
-  return <h1>{courseinfo.course}</h1>;
-};
-
-const Part = ({ name, exercise }) => {
-  return (
-    <p>
-      {name} {exercise}
-    </p>
-  );
-};
-
-const Content = ({ courseinfo }) => {
-  return (
-    <div>
-      <Part
-        name={courseinfo.parts[0].name}
-        exercise={courseinfo.parts[0].exercises}
-      />
-      <Part
-        name={courseinfo.parts[1].name}
-        exercise={courseinfo.parts[1].exercises}
-      />
-      <Part
-        name={courseinfo.parts[2].name}
-        exercise={courseinfo.parts[2].exercises}
-      />
-    </div>
-  );
-};
-
-const Total = ({ courseinfo }) => {
-  return (
-    <p>
-      Number of exercises
-      {courseinfo.parts.reduce((a, b) => (a += b.exercises), 0)}
-    </p>
-  );
-};
-
 const App = () => {
-  const courseinfo = {
-    course: "Half stack application development",
-    parts: [
-      {
-        name: "Fundamentals of React",
-        exercises: 10,
-      },
-      {
-        name: "Using props to pass data",
-        exercises: 7,
-      },
-      {
-        name: "State of a component",
-        exercises: 14,
-      },
-    ],
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  const Buttons = () => {
+    return (
+      <div>
+        <button onClick={() => setGood(good + 1)}>Good</button>
+        <button onClick={() => setNeutral(neutral + 1)}>Neutral</button>
+        <button onClick={() => setBad(bad + 1)}>Bad</button>
+      </div>
+    )
   };
 
+  const Stats  = () => {
+
+    const total = good + neutral + bad
+    
+    return (
+      <div>
+        <p>good {good}</p>
+        <p>neutral {neutral}</p>
+        <p>bad {bad}</p>
+        <p>all {total}</p>
+        <p>average {(good - bad) / total}</p>
+        <p>positive {(good / total) * 100} %</p>
+      </div>
+    )
+  }
+
   return (
     <div>
-      <Header courseinfo={courseinfo} />
-      <Content courseinfo={courseinfo} />
-      <Total courseinfo={courseinfo} />
+      <h1>give feedback</h1>
+      <Buttons />
+      <h1>Statistics</h1>
+      <Stats />
     </div>
   );
 };
