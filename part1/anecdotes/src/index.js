@@ -5,6 +5,10 @@ const Button = ({ text, handleClick }) => {
   return <button onClick={handleClick}>{text}</button>;
 };
 
+const Anecdote = ({ list, anecdote }) => {
+  return <p>{list[anecdote]}</p>;
+};
+
 const App = () => {
   const anecdotes = [
     "If it hurts, do it more often",
@@ -17,12 +21,13 @@ const App = () => {
   ];
 
   // can improve this by using a function getting the length of andecdotes
-  const [points, setPoints] = useState([0, 0, 0, 0, 0, 0, 0]);
-
+  const [points, setPoints] = useState(
+    new Array(anecdotes.length + 1).join("0").split("").map(parseFloat)
+  );
   const [selected, setSelected] = useState(0);
-
   const [mostVoted, setMostVoted] = useState(0);
 
+  console.log(points);
   // console.log("points: ", points[selected]);
   // console.log(Math.max(...points));
   // console.log(anecdotes.findIndex(() => Math.max(...points)))
@@ -31,13 +36,14 @@ const App = () => {
   return (
     <div>
       <h1>Anecdote of the day</h1>
-      {anecdotes[selected]}
+      <Anecdote list={anecdotes} anecdote={selected} />
       <p>has {points[selected]} votes</p>
       <Button
         text="next anecdote"
-        handleClick={() =>
-          setSelected(Math.floor(Math.random() * anecdotes.length))
-        }
+        handleClick={() => {
+          setSelected(Math.floor(Math.random() * anecdotes.length));
+          setMostVoted(points.indexOf(Math.max(...points)));
+        }}
       />
       <Button
         text="vote"
@@ -49,7 +55,7 @@ const App = () => {
         }}
       />
       <h1>Anecdotes with most votes</h1>
-      {anecdotes[mostVoted]}
+      <Anecdote list={anecdotes} anecdote={mostVoted} />
     </div>
   );
 };
