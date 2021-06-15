@@ -1,70 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-const Header = ({ courseinfo }) => {
-  return <h1>{courseinfo.course}</h1>;
-};
-
-const Part = ({ name, exercise }) => {
-  return (
-    <p>
-      {name} {exercise}
-    </p>
-  );
-};
-
-const Content = ({ courseinfo }) => {
-  return (
-    <div>
-      <Part
-        name={courseinfo.parts[0].name}
-        exercise={courseinfo.parts[0].exercises}
-      />
-      <Part
-        name={courseinfo.parts[1].name}
-        exercise={courseinfo.parts[1].exercises}
-      />
-      <Part
-        name={courseinfo.parts[2].name}
-        exercise={courseinfo.parts[2].exercises}
-      />
-    </div>
-  );
-};
-
-const Total = ({ courseinfo }) => {
-  return (
-    <p>
-      Number of exercises
-      {courseinfo.parts.reduce((a, b) => (a += b.exercises), 0)}
-    </p>
-  );
-};
-
 const App = () => {
-  const courseinfo = {
-    course: "Half stack application development",
-    parts: [
-      {
-        name: "Fundamentals of React",
-        exercises: 10,
-      },
-      {
-        name: "Using props to pass data",
-        exercises: 7,
-      },
-      {
-        name: "State of a component",
-        exercises: 14,
-      },
-    ],
+  const anecdotes = [
+    "If it hurts, do it more often",
+    "Adding manpower to a late software project makes it later!",
+    "The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
+    "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
+    "Premature optimization is the root of all evil.",
+    "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
+    "Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients",
+  ];
+
+  // can improve this by using a function getting the length of andecdotes
+  const [points, setPoints] = useState([0, 0, 0, 0, 0, 0, 0]);
+
+  const Button = ({ text, handleClick }) => {
+    return (
+      <div>
+        <button onClick={handleClick}>{text}</button>
+      </div>
+    );
   };
 
+  const [selected, setSelected] = useState(0);
+
+  console.log("points: ", points[selected]);
+
   return (
     <div>
-      <Header courseinfo={courseinfo} />
-      <Content courseinfo={courseinfo} />
-      <Total courseinfo={courseinfo} />
+      {anecdotes[selected]}
+      <p>has {points[selected]} votes</p>
+      <Button
+        text="next anecdote"
+        handleClick={() =>
+          setSelected(Math.floor(Math.random() * anecdotes.length))
+        }
+      />
+      <Button
+        text="vote"
+        handleClick={() => {
+          
+        }} 
+      />
     </div>
   );
 };
