@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
+const Button = ({ text, handleClick }) => {
+  return <button onClick={handleClick}>{text}</button>;
+};
+
 const App = () => {
   const anecdotes = [
     "If it hurts, do it more often",
@@ -15,20 +19,18 @@ const App = () => {
   // can improve this by using a function getting the length of andecdotes
   const [points, setPoints] = useState([0, 0, 0, 0, 0, 0, 0]);
 
-  const Button = ({ text, handleClick }) => {
-    return (
-      <div>
-        <button onClick={handleClick}>{text}</button>
-      </div>
-    );
-  };
-
   const [selected, setSelected] = useState(0);
 
-  console.log("points: ", points[selected]);
+  const [mostVoted, setMostVoted] = useState(0);
+
+  // console.log("points: ", points[selected]);
+  // console.log(Math.max(...points));
+  // console.log(anecdotes.findIndex(() => Math.max(...points)))
+  // console.log(points.indexOf(Math.max(...points)));
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}
       <p>has {points[selected]} votes</p>
       <Button
@@ -40,9 +42,14 @@ const App = () => {
       <Button
         text="vote"
         handleClick={() => {
-          
-        }} 
+          const copy = [...points];
+          copy[selected] += 1;
+          setPoints(copy);
+          setMostVoted(points.indexOf(Math.max(...points)));
+        }}
       />
+      <h1>Anecdotes with most votes</h1>
+      {anecdotes[mostVoted]}
     </div>
   );
 };
