@@ -21,13 +21,14 @@ const App = () => {
   ];
 
   // can improve this by using a function getting the length of andecdotes
-  const [points, setPoints] = useState(
+  const [points, setAllPoints] = useState(
     new Array(anecdotes.length + 1).join("0").split("").map(parseFloat)
   );
   const [selected, setSelected] = useState(0);
   const [mostVoted, setMostVoted] = useState(0);
 
-  console.log(points);
+  // console.log(points);
+  // console.log("most voted: ", mostVoted)
   // console.log("points: ", points[selected]);
   // console.log(Math.max(...points));
   // console.log(anecdotes.findIndex(() => Math.max(...points)))
@@ -40,18 +41,21 @@ const App = () => {
       <p>has {points[selected]} votes</p>
       <Button
         text="next anecdote"
-        handleClick={() => {
-          setSelected(Math.floor(Math.random() * anecdotes.length));
-          setMostVoted(points.indexOf(Math.max(...points)));
-        }}
+        handleClick={() =>
+          setSelected(Math.floor(Math.random() * anecdotes.length))
+        }
       />
       <Button
         text="vote"
         handleClick={() => {
           const copy = [...points];
           copy[selected] += 1;
-          setPoints(copy);
-          setMostVoted(points.indexOf(Math.max(...points)));
+          
+          setAllPoints([...copy])
+          console.log("copy array: ", copy)
+          console.log("points array: ", points)
+
+          setMostVoted(points.indexOf(Math.max()));
         }}
       />
       <h1>Anecdotes with most votes</h1>
@@ -60,4 +64,4 @@ const App = () => {
   );
 };
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById("root"))
