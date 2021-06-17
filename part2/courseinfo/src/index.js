@@ -25,6 +25,8 @@ const App = () => {
     ],
   };
 
+  // console.log("@ index: ", course.parts)
+
   return <Course course={course} />;
 };
 

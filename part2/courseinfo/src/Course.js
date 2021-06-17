@@ -3,7 +3,14 @@ import Header from "./Header";
 import Content from "./Content";
 
 const Course = ({ course }) => {
-  return <Header header="course.name" />;
+  // console.log("@ course: ", course.parts)
+  // console.log("@ course name: ", course.name)
+  return (
+    <div>
+      <Header header={course.name} />
+      <Content parts={course.parts} />
+    </div>
+  );
 };
 
-export default Course
+export default Course;
