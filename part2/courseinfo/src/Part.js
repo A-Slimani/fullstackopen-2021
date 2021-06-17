@@ -1,8 +1,8 @@
 import React from "react";
 
-const Part = ({ name, exercise }) => {
+const Part = ({ name, exercise, id}) => {
   return (
-    <p>
+    <p key={id}>
       {name} {exercise}
     </p>
   );
