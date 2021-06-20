@@ -1,25 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 
-const Filter = ({ persons }) => {
-  const [filteredPersons, setFilteredPersons] = useState(persons);
-  const [checkName, setCheckName] = useState("");
-
+const Filter = ({
+  persons,
+  filterChange,
+  setFiltered,
+  checkName,
+  setCheckName,
+}) => {
   const filterNames = (e) => {
     e.preventDefault();
-    setFilteredPersons(
-      persons.filter((person) => person.name.match(checkName))
-    );
-  };
-
-  const handleFilterChange = (e) => {
-    setCheckName(e.target.value);
+    setFiltered(persons.filter((person) => person.name.match(checkName)));
+    setCheckName("");
   };
 
   return (
     <div>
       <form onSubmit={filterNames}>
         <div>
-          Filter shown with: <input onChange={handleFilterChange} />
+          Filter shown with: <input onChange={filterChange} />
         </div>
       </form>
     </div>

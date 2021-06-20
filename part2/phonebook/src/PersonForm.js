@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const PersonForm = ({ persons, setPersons }) => {
+const PersonForm = ({ persons, setPersons, numChange, nameChange }) => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
 
@@ -16,22 +16,14 @@ const PersonForm = ({ persons, setPersons }) => {
     setNewNumber("");
   };
 
-  const handleNameChange = (e) => {
-    setNewName(e.target.value);
-  };
-
-  const handleNumberChange = (e) => {
-    setNewNumber(e.target.value);
-  };
-
   return (
     <form onSubmit={addNew}>
       <div>
-        name: <input value={newName} onChange={handleNameChange} />
+        name: <input value={newName} onChange={nameChange} />
       </div>
       <br></br>
       <div>
-        number: <input value={newNumber} onChange={handleNumberChange} />
+        number: <input value={newNumber} onChange={numChange} />
       </div>
       <div>
         <button type="submit">add</button>
