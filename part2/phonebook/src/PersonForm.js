@@ -1,29 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 
-const PersonForm = ({ persons, setPersons, numChange, nameChange }) => {
-  const [newName, setNewName] = useState("");
-  const [newNumber, setNewNumber] = useState("");
-
-  const addNew = (e) => {
-    e.preventDefault();
-    const currentObj = { name: newName, number: newNumber };
-
-    if (!persons.find((person) => person.name === currentObj.name)) {
-      setPersons(persons.concat(currentObj));
-    } else window.alert(`${currentObj.name} is already added to the phonebook`);
-
-    setNewName("");
-    setNewNumber("");
-  };
-
+const PersonForm = ({
+  addName,
+  newName,
+  handleNameChange,
+  newNum,
+  handleNumChange,
+}) => {
   return (
-    <form onSubmit={addNew}>
+    <form onSubmit={addName}>
       <div>
-        name: <input value={newName} onChange={nameChange} />
+        name: <input value={newName} onChange={handleNameChange} />
       </div>
-      <br></br>
       <div>
-        number: <input value={newNumber} onChange={numChange} />
+        number: <input value={newNum} onChange={handleNumChange} />
       </div>
       <div>
         <button type="submit">add</button>
