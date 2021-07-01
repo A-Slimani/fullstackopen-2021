@@ -1,39 +1,37 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Search from "./Search";
-import CountryList from "./CountryList";
+import MainContent from "./MainContent";
 
 const App = () => {
-  const [filter, setFilter] = useState("");
+  const [filterValue, setFilter] = useState("");
   const [list, setList] = useState([]);
+  const [city, setCity] = useState("");
+  const [weather, setWeather] = useState([]);
+  const [reset, setReset] = useState(false);
 
   const setCountries = () => {
-    console.log("effect");
-    axios.get("http://restcountries.eu/rest/v2/all").then((response) => {
-      console.log("promise fulfilled");
+    axios.get("http://restcountries.eu/rest/v2/all").then(response => {
       setList(response.data);
     });
   };
 
-  useEffect(setCountries, []);
-
   const countriesToShow =
-    filter === ""
+    filterValue === ""
       ? list
-      : list.filter((c) => c.name.toLowerCase().match(filter.toLowerCase()));
+      : list.filter(c => c.name.toLowerCase().match(filterValue.toLowerCase()));
 
-  const toShow = () => {
-    if(filter === ""){
-      if(list > 5){
-        setList()
-      }
-    }
-  }
+  useEffect(setCountries, []);
 
   return (
     <div>
-      <Search setFilter={setFilter} />
-      <CountryList list={countriesToShow} />
+      <Search setFilter={setFilter} setReset={setReset} />
+      <MainContent
+        list={countriesToShow}
+        filterValue={filterValue}
+        setReset={setReset}
+        reset={reset}
+      />
     </div>
   );
 };

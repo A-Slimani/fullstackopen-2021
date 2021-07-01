@@ -1,6 +1,6 @@
 import React from "react";
 
-const Search = ({ setFilter }) => {
+const Search = ({ setFilter, setReset }) => {
   return (
     <div>
       find countries
@@ -8,7 +8,8 @@ const Search = ({ setFilter }) => {
         type="text"
         onChange={({ target }) => {
           setFilter(target.value);
-          console.log(target.value)
+          setReset(false);
+          console.log(target.value);
         }}
       />
     </div>
