@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const ShowCountry = ({ country }) => {
-  const city = country.capital;
   const [weather, setWeather] = useState([]);
+  const city = country.capital;
 
   const getWeather = () => {
     const call = "http://api.weatherstack.com/current?access_key=".concat(
@@ -17,7 +17,9 @@ const ShowCountry = ({ country }) => {
   };
 
   useEffect(getWeather, []);
-  console.log(weather);
+  console.log("City: ", city)
+  console.log("weather: ", weather)
+
 
   return (
     <div>
@@ -42,7 +44,7 @@ const ShowCountry = ({ country }) => {
       />
       <h2>Weather in {country.capital}</h2>
       <p>
-        <b>temperature:</b> {weather.current.temperature} Celcius
+        <b>temperature:</b> Celcius
       </p>
       <img />
       <p>

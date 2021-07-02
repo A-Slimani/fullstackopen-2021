@@ -5,20 +5,6 @@ import axios from "axios";
 
 const MainContent = ({ list, filterValue, setReset, reset }) => {
   const [index, setIndex] = useState("");
-  // const [weather, setWeather] = useState([]);
-  // const [city, setCity] = useState("");
-  // const initalCall = "http://api.weatherstack.com/current?access_key=".concat(
-  //   process.env.REACT_APP_API_KEY,
-  //   "&query="
-  // );
-  // const [call, setCall] = useState(initalCall);
-
-  // const getWeather = () => {
-  //   setCall(call.concat(city));
-  //   axios.get(call).then(response => {
-  //     setWeather(response.data);
-  //   });
-  // };
 
   const getCountry = e => {
     console.log(e.currentTarget.id); // gets the index of the button

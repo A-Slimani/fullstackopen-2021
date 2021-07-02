@@ -23,6 +23,8 @@ const App = () => {
 
   useEffect(setCountries, []);
 
+  console.log(countriesToShow)  
+
   return (
     <div>
       <Search setFilter={setFilter} setReset={setReset} />
