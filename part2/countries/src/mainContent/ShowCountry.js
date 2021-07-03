@@ -2,24 +2,56 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const ShowCountry = ({ country }) => {
-  const [weather, setWeather] = useState([]);
   const city = country.capital;
+  const [cities, setCities] = useState([]);
+  const [cityCode, setCityCode] = useState("");
+  const [weatherInfo, setWeatherInfo] = useState([]);
 
-  const getWeather = () => {
-    const call = "http://api.weatherstack.com/current?access_key=".concat(
-      process.env.REACT_APP_API_KEY,
-      "&query=",
-      city
-    );
-    axios.get(call).then(response => {
-      setWeather(response.data);
-    });
+  const [temp, setTemp] = useState("");
+
+  const getCityCodes = () => {
+    const call =
+      "http://dataservice.accuweather.com/locations/v1/cities/search?apikey=".concat(
+        process.env.REACT_APP_API_KEY,
+        "&q=",
+        city
+      );
+    axios.get(call).then(response => setCities(response.data));
   };
 
-  useEffect(getWeather, []);
-  console.log("City: ", city)
-  console.log("weather: ", weather)
+  const getWeatherInfo = () => {
+    const call = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/".concat(
+      cityCode,
+      "?apikey=",
+      process.env.REACT_APP_API_KEY
+    );
+    axios.get(call).then(response => setWeatherInfo(response.data));
+  };
 
+  const findCityCode = () => {
+    for (const c of cities) {
+      if (c.Country.LocalizedName.match(country.name)) {
+        setCityCode(c.Key);
+      }
+    }
+  };
+
+  const getTemp = () => {
+    if (weatherInfo.Temperature !== undefined) {
+      setTemp(weatherInfo.Temperature.Minimum.Value);
+    }
+
+    return temp;
+  };
+
+  useEffect(findCityCode, [country.name, cities]);
+  useEffect(getCityCodes, [city]);
+  useEffect(getWeatherInfo, [cityCode]);
+
+  console.log("ciCodes: ", cities);
+  console.log("Current city code: ", cityCode);
+  console.log("current weather info: ", weatherInfo);
+  console.log("temp: ", weatherInfo.DailyForeCasts)
 
   return (
     <div>
@@ -44,9 +76,10 @@ const ShowCountry = ({ country }) => {
       />
       <h2>Weather in {country.capital}</h2>
       <p>
-        <b>temperature:</b> Celcius
+        <b>temperature:</b>
+        {getTemp()}
       </p>
-      <img />
+      <img alt="" />
       <p>
         <b>wind: </b>
       </p>

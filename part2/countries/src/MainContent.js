@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ShowCountry from "./mainContent/ShowCountry";
 import CountryList from "./mainContent/CountryList";
-import axios from "axios";
 
 const MainContent = ({ list, filterValue, setReset, reset }) => {
   const [index, setIndex] = useState("");
@@ -14,20 +13,16 @@ const MainContent = ({ list, filterValue, setReset, reset }) => {
 
   const Main = () => {
     if (list.length === 1) {
-      // setCity(list[0].capital);
       return <ShowCountry country={list[0]} />;
     } else if (reset) {
-      // setCity(list[index].capital);
       return <ShowCountry country={list[index]} />;
     } else if (list.length > 5) {
-      // setCall(initalCall);
       return filterValue.length === 0 ? (
         <p></p>
       ) : (
         <p>Too many matches, specify another filter</p>
       );
     } else {
-      // setCall(initalCall);
       return <CountryList list={list} getCountry={getCountry} />;
     }
   };

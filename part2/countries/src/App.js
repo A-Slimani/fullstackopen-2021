@@ -6,8 +6,8 @@ import MainContent from "./MainContent";
 const App = () => {
   const [filterValue, setFilter] = useState("");
   const [list, setList] = useState([]);
-  const [city, setCity] = useState("");
-  const [weather, setWeather] = useState([]);
+  // const [city, setCity] = useState("");
+  // const [weather, setWeather] = useState([]);
   const [reset, setReset] = useState(false);
 
   const setCountries = () => {
@@ -23,7 +23,7 @@ const App = () => {
 
   useEffect(setCountries, []);
 
-  console.log(countriesToShow)  
+  console.log("countries to show: ", countriesToShow)  
 
   return (
     <div>
