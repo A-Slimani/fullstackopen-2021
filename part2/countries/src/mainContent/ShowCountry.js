@@ -5,9 +5,8 @@ const ShowCountry = ({ country }) => {
   const city = country.capital;
   const [cities, setCities] = useState([]);
   const [cityCode, setCityCode] = useState("");
-  const [weatherInfo, setWeatherInfo] = useState([]);
-
-  const [temp, setTemp] = useState("");
+  const [weatherInfo, setWeatherInfo] = useState("");
+  const [check, setCheck] = useState(false);
 
   const getCityCodes = () => {
     const call =
@@ -20,38 +19,42 @@ const ShowCountry = ({ country }) => {
   };
 
   const getWeatherInfo = () => {
-    const call = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/".concat(
-      cityCode,
-      "?apikey=",
-      process.env.REACT_APP_API_KEY
-    );
-    axios.get(call).then(response => setWeatherInfo(response.data));
+    if (cityCode !== "") {
+      const call = "http://dataservice.accuweather.com/currentconditions/v1/daily/1day/".concat(
+        cityCode,
+        "?apikey=",
+        process.env.REACT_APP_API_KEY,
+        "&metric=true"
+      );
+      axios.get(call).then(response => setWeatherInfo(response.data));
+    }
   };
 
   const findCityCode = () => {
     for (const c of cities) {
-      if (c.Country.LocalizedName.match(country.name)) {
-        setCityCode(c.Key);
-      }
+      if (c.Country.LocalizedName.match(country.name)) setCityCode(c.Key);
     }
-  };
-
-  const getTemp = () => {
-    if (weatherInfo.Temperature !== undefined) {
-      setTemp(weatherInfo.Temperature.Minimum.Value);
-    }
-
-    return temp;
   };
 
   useEffect(findCityCode, [country.name, cities]);
   useEffect(getCityCodes, [city]);
   useEffect(getWeatherInfo, [cityCode]);
 
-  console.log("ciCodes: ", cities);
-  console.log("Current city code: ", cityCode);
-  console.log("current weather info: ", weatherInfo);
-  console.log("temp: ", weatherInfo.DailyForeCasts)
+  const weatherCheck = () => {
+    return weatherInfo.DailyForecasts !== undefined
+      ? weatherInfo.DailyForecasts[0].Day.Icon
+      : "failed";
+  };
+
+  const showTemp = () => {
+    return weatherInfo.DailyForecasts !== undefined
+      ? weatherInfo.DailyForecasts[0].Temperature.Maximum.Value
+      : "";
+  };
+
+  const showWind = () => {};
+
+  console.log("Daily Forecasts: ", weatherInfo.DailyForecasts);
 
   return (
     <div>
@@ -76,12 +79,12 @@ const ShowCountry = ({ country }) => {
       />
       <h2>Weather in {country.capital}</h2>
       <p>
-        <b>temperature:</b>
-        {getTemp()}
+        <b>temperature:</b> {showTemp()} Celcius
       </p>
       <img alt="" />
+      {weatherCheck()}
       <p>
-        <b>wind: </b>
+        <b>wind: </b> 
       </p>
     </div>
   );
