@@ -20,12 +20,13 @@ const ShowCountry = ({ country }) => {
 
   const getWeatherInfo = () => {
     if (cityCode !== "") {
-      const call = "http://dataservice.accuweather.com/currentconditions/v1/daily/1day/".concat(
-        cityCode,
-        "?apikey=",
-        process.env.REACT_APP_API_KEY,
-        "&metric=true"
-      );
+      const call =
+        "http://dataservice.accuweather.com/currentconditions/v1/daily/1day/".concat(
+          cityCode,
+          "?apikey=",
+          process.env.REACT_APP_API_KEY,
+          "&metric=true"
+        );
       axios.get(call).then(response => setWeatherInfo(response.data));
     }
   };
@@ -52,7 +53,7 @@ const ShowCountry = ({ country }) => {
       : "";
   };
 
-  const showWind = () => {};
+  // const showWind = () => {};
 
   console.log("Daily Forecasts: ", weatherInfo.DailyForecasts);
 
@@ -84,7 +85,7 @@ const ShowCountry = ({ country }) => {
       <img alt="" />
       {weatherCheck()}
       <p>
-        <b>wind: </b> 
+        <b>wind: </b>
       </p>
     </div>
   );
