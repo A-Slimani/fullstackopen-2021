@@ -32,6 +32,14 @@ const App = () => {
     setNewNum("");
   };
 
+  const deleteName = e => {
+    // need to find a way to rerender
+    if (window.confirm(`Delete ${persons[e.currentTarget.id].name}`)) {
+      personService.remove(persons[e.currentTarget.id].id);
+    }
+  };
+
+
   const namesToShow =
     filter === ""
       ? persons
@@ -60,7 +68,7 @@ const App = () => {
         handleNumChange={handleNumChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={namesToShow} />
+      <Persons persons={namesToShow} deletePerson={deleteName} />
     </div>
   );
 };
