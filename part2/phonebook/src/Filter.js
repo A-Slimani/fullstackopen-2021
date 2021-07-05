@@ -1,11 +1,14 @@
 import React from "react";
 
-const Filter = ({ filterNames, checkName, handleFilterChange }) => {
+const Filter = ({setFilter}) => {
   return (
-    <form onSubmit={filterNames}>
+    <form>
       <div>
         filter shown with
-        <input value={checkName} onChange={handleFilterChange}></input>
+        <input onChange={({target}) => {
+          setFilter(target.value)
+          console.log(target.value)
+        }}></input>
       </div>
     </form>
   );
