@@ -9,36 +9,56 @@ const App = () => {
   const [filter, setFilter] = useState("");
   const [newName, setNewName] = useState("");
   const [newNum, setNewNum] = useState("");
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     personService.getAll().then(response => {
       setPersons(response.data);
+      setRefresh(false);
     });
-  }, []);
+  }, [refresh]);
 
   const addName = e => {
     e.preventDefault();
-    const currentObj = { name: newName, number: newNum };
+    const newPerson = { name: newName, number: newNum };
 
-    if (newName === "" || newNum === "") {
-      window.alert("missing name and or number");
-    } else if (!persons.find(p => p.name === currentObj.name)) {
-      personService.create(currentObj).then(response => {
-        setPersons(persons.concat(currentObj));
+    if (!persons.find(p => p.name === newPerson.name)) {
+      personService.create(newPerson).then(r => {
+        setPersons(persons.concat(newPerson));
+        setRefresh(true);
       });
-    } else window.alert(`${currentObj.name} is already added to the phonebook`);
-
+    } else {
+      for (const p of persons) {
+        if (newName === "" || newNum === "") {
+          window.alert("missing name and or number");
+        } else if (p.name === newPerson.name) {
+          if (p.number === newPerson.number) {
+            window.alert(
+              `${newPerson.name} and ${newPerson.number} is already added to the phonebook`
+            );
+          } else {
+            if (
+              window.confirm(
+                `${newPerson.name} is already added to the phonebook, replace the old number with a new one?`
+              )
+            ) {
+              personService.update(p.id, newPerson);
+              setRefresh(true);
+            }
+          }
+        }
+      }
+    }
     setNewName("");
     setNewNum("");
   };
 
-  const deleteName = e => {
-    // need to find a way to rerender
+  const deletePerson = e => {
     if (window.confirm(`Delete ${persons[e.currentTarget.id].name}`)) {
       personService.remove(persons[e.currentTarget.id].id);
+      setRefresh(true);
     }
   };
-
 
   const namesToShow =
     filter === ""
@@ -68,7 +88,7 @@ const App = () => {
         handleNumChange={handleNumChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={namesToShow} deletePerson={deleteName} />
+      <Persons persons={namesToShow} deletePerson={deletePerson} />
     </div>
   );
 };
