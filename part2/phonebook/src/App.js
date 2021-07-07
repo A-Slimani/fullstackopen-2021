@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
 import Filter from "./Filter";
+import Notification from "./components/Notification";
 import personService from "./services/Person";
 
 const App = () => {
@@ -10,6 +11,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNum, setNewNum] = useState("");
   const [refresh, setRefresh] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [isError, setError] = useState(false);
 
   useEffect(() => {
     personService.getAll().then(response => {
@@ -23,9 +26,13 @@ const App = () => {
     const newPerson = { name: newName, number: newNum };
 
     if (!persons.find(p => p.name === newPerson.name)) {
-      personService.create(newPerson).then(r => {
+      personService.create(newPerson).then(() => {
         setPersons(persons.concat(newPerson));
         setRefresh(true);
+        setMessage(`Added ${newPerson.name}`);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
       });
     } else {
       for (const p of persons) {
@@ -42,7 +49,12 @@ const App = () => {
                 `${newPerson.name} is already added to the phonebook, replace the old number with a new one?`
               )
             ) {
-              personService.update(p.id, newPerson);
+              personService.update(p.id, newPerson).catch(() => {
+                setMessage(
+                  `Information of '${newPerson.name}' had already been removed from the server`
+                );
+                setError(true);
+              });
               setRefresh(true);
             }
           }
@@ -78,6 +90,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} error={isError} />
+      <br />
       <Filter setFilter={setFilter} />
       <h2>Add a new</h2>
       <PersonForm
