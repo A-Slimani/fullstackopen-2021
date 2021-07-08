@@ -7,6 +7,16 @@ const app = express();
 
 app.use(express.json())
 
+const requestLogger = (request, response, text) => {
+  console.log("Method: ", request.method);
+  console.log("Path: ", request.path);
+  console.log("Body: ", request.body);
+  console.log("---");
+  next();
+};
+
+app.use(requestLogger)
+
 let notes = [
   { id: 1, content: "HTML is easy", date: "2019-05-30T17:30:31.098Z", important: true },
   {
@@ -23,6 +33,11 @@ let notes = [
   },
 ];
 
+const generateId = () => {
+  const maxId = notes.length > 0 ? Math.max(...notes.map(n => n.id)) : 0;
+  return maxId + 1;
+};
+
 // handle HTTP GET requests made to the applications root
 app.get("/", (request, response) => {
   response.end("<h1>Hello World!</h1>");
@@ -36,23 +51,46 @@ app.get("/api/notes/:id", (request, response) => {
   const id = Number(request.params.id);
   const note = notes.find(note => note.id === id);
 
-	if(note){
-		response.json(note)
-	} else response.status(404).end()
+  if (note) {
+    response.json(note);
+  } else response.status(404).end();
 });
 
-app.post('/api/notes', (request, response) => {
-  const note = request.body
-  console.log(note)
-  response.json(note)
-})
+app.post("/api/notes", (request, response) => {
+  const body = request.body;
 
-app.delete('/api/notes/:id', (request, response) => {
-	const id = Number(request.params.id)
-	notes = notes.filter(note => note.id !== id)
+  // if the recieved data is missing a value for the content property, the server
+  // will respond to the request with the status code 400 bad request
+  if (!body.content) {
+    return response.status(400).json({
+      error: "content missing",
+    });
+  }
 
-	response.status(204).end()
-})
+  const note = {
+    id: generateId(),
+    content: body.content,
+    date: new Date(),
+    important: body.important || false,
+  };
+
+  notes = notes.concat(note);
+
+  response.json(note);
+});
+
+app.delete("/api/notes/:id", (request, response) => {
+  const id = Number(request.params.id);
+  notes = notes.filter(note => note.id !== id);
+
+  response.status(204).end();
+});
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint)
 
 const PORT = 3001;
 app.listen(PORT, () => {

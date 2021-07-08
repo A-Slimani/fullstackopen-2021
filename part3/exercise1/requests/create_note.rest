@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/notes
+content-Type: application/json
+
+{
+	"content": "Creating a post through vscode",
+	"important": false
+}
+
+
