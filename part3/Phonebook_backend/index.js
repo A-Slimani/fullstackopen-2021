@@ -1,7 +1,16 @@
+const { json } = require("express");
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 
+var token = morgan.token("postreq", function (req, res) {
+  const body = JSON.stringify(req.body)
+  return JSON.stringify(req.body)
+});
+
 app.use(express.json());
+// app.use(morgan('tiny'))
+app.use(morgan(":method :url :status - :total-time[3] ms :postreq"));
 
 let persons = [
   {
@@ -65,13 +74,11 @@ app.post("/api/persons", (request, response) => {
       error: message,
     });
 
-  const search = type => persons.find(p => p.type === body.type);
-
   if (!body.name || !body.number) {
     return errorMessage("missing name and or number");
   } else if (persons.find(p => p.name === body.name)) {
     return errorMessage("name must be unique");
-  } 
+  }
 
   const person = {
     id: generateId(),
