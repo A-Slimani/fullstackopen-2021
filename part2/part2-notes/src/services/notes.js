@@ -1,8 +1,16 @@
 import axios from "axios";
 const baseUrl = "http://localhost:3001/notes";
 
+const express = require("express");
+const app = express();
+app.use(express.json())
+
+const cors = require("cors");
+app.use(cors());
+
 const getAll = () => {
-  return axios.get(baseUrl);
+  const request = axios.get(baseUrl);
+  return request.then(response => response.data);
 };
 
 const create = newObject => {
