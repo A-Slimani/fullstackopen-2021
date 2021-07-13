@@ -2,16 +2,15 @@
 
 //  importing express, a function used to create an express application
 // 	stored in the app variable
-const express = require("express");
+const express = require('express');
 const app = express();
-const cors = require("cors");
+const cors = require('cors');
 
+app.use(express.static('build'))
+app.use(cors());
 app.use(express.json());
-app.use(cors())
 
-
-
-const requestLogger = (request, response, text) => {
+const requestLogger = (request, response, next) => {
   console.log("Method: ", request.method);
   console.log("Path: ", request.path);
   console.log("Body: ", request.body);
