@@ -15,8 +15,8 @@ const App = () => {
   const [isError, setError] = useState(false);
 
   useEffect(() => {
-    personService.getAll().then(response => {
-      setPersons(response.data);
+    personService.getAll().then(persons => {
+      setPersons(persons);
       setRefresh(false);
     });
   }, [refresh]);
@@ -86,6 +86,8 @@ const App = () => {
     e.preventDefault();
     setNewNum(e.target.value);
   };
+
+  // console.log("names to show: ", namesToShow)
 
   return (
     <div>

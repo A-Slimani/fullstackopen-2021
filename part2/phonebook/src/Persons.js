@@ -1,6 +1,7 @@
 import React from "react";
 
 const Persons = ({ persons, deletePerson }) => {
+  // console.log("current persons: ", persons)
   return (
     <ul>
       {persons.map((p, i) => (
