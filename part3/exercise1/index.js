@@ -2,11 +2,14 @@
 
 //  importing express, a function used to create an express application
 // 	stored in the app variable
-const express = require('express');
+const express = require("express");
 const app = express();
-const cors = require('cors');
+const cors = require("cors");
+const mongoose = require("mongoose");
 
-app.use(express.static('build'))
+const url = `mongodb+srv://aboud:${password}@cluster0.b0bjt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+
+app.use(express.static("build"));
 app.use(cors());
 app.use(express.json());
 
@@ -34,16 +37,16 @@ let notes = [
     date: "2019-05-30T19:20:14.298Z",
     important: true,
   },
-]; 
+];
 
 app.get("/", (req, res) => {
-  res.send('<h1>Hello World</h1>')
-})
+  res.send("<h1>Hello World</h1>");
+});
 
-app.get('api/notes', (req, res) => {
-  res.json(notes)
-  console.log("test")
-})
+app.get("api/notes", (req, res) => {
+  res.json(notes);
+  console.log("test");
+});
 
 const generateId = () => {
   const maxId = notes.length > 0 ? Math.max(...notes.map(n => n.id)) : 0;
