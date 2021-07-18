@@ -3,6 +3,7 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const app = express();
+const Person = require('./models/person')
 
 var token = morgan.token("postreq", function (req, res) {
   const body = JSON.stringify(req.body);
@@ -15,28 +16,28 @@ app.use(express.json());
 app.use(morgan(":method :url :status - :total-time[3] ms :postreq"));
 app.use(cors());
 
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+// let persons = [
+//   {
+//     id: 1,
+//     name: "Arto Hellas",
+//     number: "040-123456",
+//   },
+//   {
+//     id: 2,
+//     name: "Ada Lovelace",
+//     number: "39-44-5323523",
+//   },
+//   {
+//     id: 3,
+//     name: "Dan Abramov",
+//     number: "12-43-234345",
+//   },
+//   {
+//     id: 4,
+//     name: "Mary Poppendieck",
+//     number: "39-23-6423122",
+//   },
+// ];
 
 const generateId = () => {
   let id = Math.ceil(Math.random() * 1000);
