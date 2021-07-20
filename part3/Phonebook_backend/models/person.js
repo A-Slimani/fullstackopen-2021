@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+require("dotenv").config();
+
 const url = process.env.MONGODB_URI;
 
 console.log("connecting to", url);
@@ -31,4 +33,4 @@ personSchema.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("Note", noteSchema);
+module.exports = mongoose.model("Person", personSchema);

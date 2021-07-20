@@ -9,7 +9,7 @@ const password = process.argv[2];
 const nameInput = process.argv[3];
 const numberInput = process.argv[4];
 
-const url = `mongodb+srv://aboud:${password}@cluster0.b0bjt.mongodb.net/phonebook?retryWrites=true&w=majority`;
+const url = `mongodb+srv://aboud:${password}@cluster0.b0bjt.mongodb.net/Phonebook?retryWrites=true&w=majority`;
 
 mongoose.connect(url, {
   useNewUrlParser: true,

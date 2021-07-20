@@ -87,8 +87,6 @@ const App = () => {
     setNewNum(e.target.value);
   };
 
-  // console.log("names to show: ", namesToShow)
-
   return (
     <div>
       <h2>Phonebook</h2>
