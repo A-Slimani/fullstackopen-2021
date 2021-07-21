@@ -28,6 +28,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidatonError") {
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);
@@ -61,9 +63,15 @@ app.post("/api/notes", (request, response) => {
     date: new Date(),
   });
 
-  note.save().then(savedNote => {
-    response.json(savedNote);
-  });
+  note
+    .save()
+    .then(savedNote => {
+      return savedNote.toJSON();
+    })
+    .then(savedAndFormattedNote => {
+      response.json(savedAndFormattedNote);
+    })
+    .catch(error => next(error));
 
   response.json(note);
 });
