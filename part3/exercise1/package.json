@@ -7,11 +7,6 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "react-scripts build",
-    "build:ui": "rm -rf build && ../part2/part2-notes/ && npm run biuld --prod && cp -r build ../../exercise1",
-    "deploy": "git push heroku main",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
-    "logs:prod": "heroku logs --tail"
   },
   "author": "Aboud",
   "license": "ISC",
