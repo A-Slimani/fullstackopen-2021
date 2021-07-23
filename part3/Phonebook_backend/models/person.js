@@ -1,10 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
-require("dotenv").config();
+require('dotenv').config();
 
 const url = process.env.MONGODB_URI;
 
-console.log("connecting to", url);
+console.log('connecting to', url);
 
 mongoose
   .connect(url, {
@@ -14,18 +15,29 @@ mongoose
     useCreateIndex: true,
   })
   .then(() => {
-    console.log("connected to mongoDB");
+    console.log('connected to mongoDB');
   })
   .catch(error => {
-    console.log("error connecting to MongoDB: ", error.message);
+    console.log('error connecting to MongoDB: ', error.message);
   });
 
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    required: true,
+    minlength: 3,
+  },
+  number: {
+    type: String,
+    required: true,
+    minlength: 8,
+  },
 });
 
-personSchema.set("toJSON", {
+//Application of unique validator
+personSchema.plugin(uniqueValidator, { message: 'Error, expected unique person' });
+
+personSchema.set('toJSON', {
   transform: (document, returnedObj) => {
     returnedObj.id = returnedObj._id.toString();
     delete returnedObj._id;
@@ -33,4 +45,4 @@ personSchema.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("Person", personSchema);
+module.exports = mongoose.model('Person', personSchema);

@@ -26,14 +26,23 @@ const App = () => {
     const newPerson = { name: newName, number: newNum };
 
     if (!persons.find(p => p.name === newPerson.name)) {
-      personService.create(newPerson).then(() => {
-        setPersons(persons.concat(newPerson));
-        setRefresh(true);
-        setMessage(`Added ${newPerson.name}`);
-        setTimeout(() => {
-          setMessage(null);
-        }, 5000);
-      });
+      personService
+        .create(newPerson)
+        .then(() => {
+          setPersons(persons.concat(newPerson));
+          setRefresh(true);
+          setMessage(`Added ${newPerson.name}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+        })
+        .catch(error => {
+          setError(true);
+          setMessage(`${error.response.data.error}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+        });
     } else {
       for (const p of persons) {
         if (newName === "" || newNum === "") {
@@ -53,8 +62,11 @@ const App = () => {
                 setMessage(
                   `Information of '${newPerson.name}' had already been removed from the server`
                 );
-                setError(true);
               });
+              setMessage(`${p.name} has been updated`);
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000)
               setRefresh(true);
             }
           }
@@ -69,6 +81,10 @@ const App = () => {
     if (window.confirm(`Delete ${persons[e.currentTarget.id].name}`)) {
       personService.remove(persons[e.currentTarget.id].id);
       setRefresh(true);
+      setMessage(`${persons[e.currentTarget.id].name} removed`);
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
     }
   };
 

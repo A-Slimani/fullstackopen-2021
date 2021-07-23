@@ -1,6 +1,12 @@
+// if(process.env.NODE_ENV !== "production"){
+//   require("dotenv").config()
+// }
+
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+// const mongoose = require("mongoose");
+// const uniqueValidator = require("mongoose-unique-validator");
 const app = express();
 const Person = require("./models/person");
 
@@ -14,20 +20,13 @@ app.use(express.json());
 app.use(morgan(":method :url :status - :total-time[3] ms :postreq"));
 app.use(cors());
 
-const errorHandler = (error, request, response, next) => {
-  console.log(error.message);
-
-  if (error.name === "CastError")
-    return response.status(400).end({ error: "malformatted id" });
-
-  next(error);
-};
-
 // get ALL PERSONS
 app.get("/api/persons", (request, response) => {
-  Person.find({}).then(person => {
-    response.json(person);
-  });
+  Person.find({})
+    .then(person => {
+      response.json(person);
+    })
+    .catch(error => next(error));
 });
 
 // get info on a SELECTED PERSONS
@@ -47,7 +46,7 @@ app.get("/info", (request, response) => {
 });
 
 // CREATE and POST a single phonebook ENTRY
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const body = request.body;
 
   if (body === undefined) {
@@ -59,9 +58,15 @@ app.post("/api/persons", (request, response) => {
     number: body.number,
   });
 
-  person.save().then(savedPerson => {
-    response.json(savedPerson);
-  });
+  person
+    .save()
+    .then(savedPerson => {
+      return savedPerson.toJSON();
+    })
+    .then(savedAndFormattedNote => {
+      response.json(savedAndFormattedNote);
+    })
+    .catch(error => next(error));
 });
 
 // DELETE a single phonebook ENTRY
@@ -88,10 +93,21 @@ app.put("/api/persons/:id", (request, response, next) => {
     .catch(error => next(error));
 });
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError" && error.kind === "ObjectId") {
+    return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
+
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-// this had to be the last loaded middleware
-app.use(errorHandler);

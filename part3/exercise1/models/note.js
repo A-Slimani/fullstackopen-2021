@@ -1,44 +1,36 @@
-const mongoose = require("mongoose");
 
-require("dotenv").config();
+const mongoose = require('mongoose')
 
-const url = process.env.MONGODB_URI;
+mongoose.set('useFindAndModify', false)
 
-console.log("connecting to ", url);
+const url = process.env.MONGODB_URI
 
-mongoose
-  .connect(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
+console.log('commecting to', url)
+
+mongoose.connect(url, { useNewUrlParser: true })
+  .then(result => {
+    console.log('connected to MongoDB')
   })
-  .then(() => {
-    console.log("connected to MongoDB");
+  .catch((error) => {
+    console.log('error connection to MongoDB:', error.message)
   })
-  .catch(error => {
-    console.log("error connecting to MongoDB", error.message);
-  });
 
 const noteSchema = new mongoose.Schema({
   content: {
     type: String,
-    minLength: 5,
     required: true,
+    minlength: 5
   },
-  date: {
-    type: Date,
-    required: true,
-  },
+  date: Date,
   important: Boolean,
-});
+})
 
-noteSchema.set("toJSON", {
+noteSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
-
-module.exports = mongoose.model("Note", noteSchema);
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
+})
+  
+module.exports = mongoose.model('Note', noteSchema)
