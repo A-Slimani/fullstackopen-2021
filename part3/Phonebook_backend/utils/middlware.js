@@ -22,11 +22,11 @@ const errorHandler = (request, response, error, next) => {
     return response.status(400).json({ error: error.message });
   }
 
-	next(error)
+  next(error);
 };
 
 module.exports = {
-	requestLogger,
-	unknownEndpoint,
-	errorHandler
-}
+  requestLogger,
+  unknownEndpoint,
+  errorHandler,
+};

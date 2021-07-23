@@ -1,3 +1,5 @@
+// DEFINES THE MONGOOSE SCHEMA FOR PERSON (DATABASE)
+
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
