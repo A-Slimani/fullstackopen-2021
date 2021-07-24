@@ -64,4 +64,4 @@ personRouter.put('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error));
 });
 
-module.exports = notesRouter
+module.exports = personRouter 

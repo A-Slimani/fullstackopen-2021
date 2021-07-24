@@ -2,7 +2,7 @@ const config = require('./utils/config');
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const notesRouter = require('./controllers/persons');
+const personRouter = require('./controllers/persons');
 const middleware = require('./utils/middleware');
 const logger = require('./utils/logger');
 const mongoose = require('mongoose');
@@ -17,7 +17,7 @@ mongoose
     useCreateIndex: true,
   })
   .then(() => {
-    logger.info('connect to MongoDB');
+    logger.info('App connected to MongoDB');
   })
   .catch(error => {
     logger.error('error connecting to MongoDB: ', error.messsage);

@@ -17,7 +17,7 @@ mongoose
     useCreateIndex: true,
   })
   .then(() => {
-    console.log('connected to mongoDB');
+    console.log('Schema connected to mongoDB');
   })
   .catch(error => {
     console.log('error connecting to MongoDB: ', error.message);
