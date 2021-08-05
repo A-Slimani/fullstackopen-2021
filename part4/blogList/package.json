@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test jest --verbose --runInBand",
-    "dev": "nodemon index.js",
-    "jest": "jest --verbose"
+    "dev": "NODE_ENV=development nodemon index.js",
+    "jest": "jest --verbose",
+    "start": "NODE_ENV=production node index.js"
   },
   "author": "aboud",
   "license": "ISC",
@@ -19,6 +20,7 @@
     "nodemon": "^2.0.12"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "jest": "^27.0.6",
     "supertest": "^6.1.4"
   },

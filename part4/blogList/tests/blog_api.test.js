@@ -6,6 +6,9 @@ const Blog = require('../models/blog');
 const initialBlog = [
   {
     title: 'first blog',
+    author: 'me',
+    url: 'newBlog.url',
+    likes: 22,
   },
 ];
 
@@ -35,13 +38,13 @@ describe('testing the server', () => {
     };
 
     await api
-      .post('/api/notes')
+      .post('/api/blogs')
       .send(newBlog)
       .expect(200)
       .expect('Content-Type', /application\/json/);
   });
 
-  const response = await api.get('/api/notes');
+  const response = await api.get('/api/blogs');
 
   const title = response.body.map(r => r.title);
 
