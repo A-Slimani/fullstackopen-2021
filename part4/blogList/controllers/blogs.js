@@ -12,17 +12,14 @@ blogRouter.get('/', async (req, res) => {
   res.json(blogs);
 });
 
-blogRouter.post('/api/blogs', async (req, res) => {
+blogRouter.post('/api/blogs', async (req, res, next) => {
   const blog = new Blog(req.body);
-  const savedBlog = await blog.save();
-  res.json(savedBlog);
-
-  // try {
-  //   const savedBlog = await blog.save();
-  //   response.json(savedBlog);
-  // } catch (exception) {
-  //   next(exception);
-  // }
+  try {
+    const savedBlog = await blog.save();
+    res.json(savedBlog);
+  } catch (exception) {
+    next(exception);
+  }
 });
 
 module.exports = blogRouter;
