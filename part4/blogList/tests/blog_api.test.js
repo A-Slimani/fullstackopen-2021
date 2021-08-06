@@ -1,27 +1,17 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
+const helper = require('./test_helper');
 const api = supertest(app);
+
 const Blog = require('../models/blog');
-const initialBlogs = [
-  {
-    title: 'first blog',
-    author: 'Abdullah',
-    url: 'newBlog.org',
-    likes: 22,
-  },
-  {
-    title: 'second one',
-    author: 'Slimani',
-    url: 'nsecond.org',
-    likes: 44,
-  },
-];
 
 beforeEach(async () => {
   await Blog.deleteMany({});
+
   let blogObject = new Blog(initialBlogs[0]);
   await blogObject.save();
+
   blogObject = new Blog(initialBlogs[1]);
   await blogObject.save();
 });
@@ -31,18 +21,19 @@ test('blogs returned as json', async () => {
     .get('/api/blogs')
     .expect(200)
     .expect('Content-Type', /application\/json/);
-}, 100000);
+});
 
 test('all blogs are returned', async () => {
   const res = await api.get('/api/blogs');
-  expect(res.body).toHaveLength(initialBlogs.length);
+
+  expect(res.body).toHaveLength(helper.initialBlogs.length);
 });
 
 test('a specific blog is within the returned blog', async () => {
   const res = await api.get('/api/blogs');
 
-  const contents = res.body.map(r => r.title);
-  expect(contents).toContain('second one');
+  const titles = res.body.map(r => r.title);
+  expect(titles).toContain('second one');
 });
 
 test('a valid blog can be added', async () => {
@@ -59,14 +50,25 @@ test('a valid blog can be added', async () => {
     .expect(200)
     .expect('Content-Type', /application\/json/);
 
-  const res = await api.get('/api/blogs');
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
 
-  const contents = res.body.map(r => r.title);
-
-  console.log(typeof initialBlogs.length)
-  expect(res.title).toHaveLength(initialBlogs.length + 1);
-  expect(contents).toContain('3rd one');
+  const titles = blogsAtEnd.map(r => r.title);
+  expect(titles).toContain('3rd one');
 });
+
+// WONT WORK SINCE THE FUNCTION IS FULLY COMPLETE YET
+// test('note without content is not added', async () => {
+//   const newBlog = {
+//     author: 'another one',
+//   };
+//
+//   await api.post('/api/blogs').send(newBlog).expect(400);
+//
+//   const res = await api.get('/api/blogs');
+//
+//   expect(res.body).toHaveLength(initialBlogs.length);
+// });
 
 afterAll(() => {
   mongoose.connection.close();
