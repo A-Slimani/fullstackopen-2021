@@ -2,14 +2,12 @@ const Blog = require('../models/blog');
 
 const initialBlogs = [
   {
-    id: '1',
     title: 'first blog',
     author: 'Abdullah',
     url: 'newBlog.org',
     likes: 22,
   },
   {
-    id: '2',
     title: 'second one',
     author: 'Slimani',
     url: 'nsecond.org',

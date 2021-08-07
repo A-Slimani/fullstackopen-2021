@@ -61,12 +61,10 @@ test('a valid blog can be added', async () => {
 test('a specific note can be viewed', async () => {
   const blogsAtStart = await helper.blogsInDb();
 
-  console.log(blogsAtStart)
-
   const blogToView = blogsAtStart[0];
 
   const resultBlog = await api
-    .get(`/api/blogs/${blogToView.id}`)
+    .get(`/api/blogs/${blogToView._id}`)
     .expect(200)
     .expect('Content-Type', /application\/json/);
 
