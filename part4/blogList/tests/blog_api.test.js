@@ -6,10 +6,11 @@ const api = supertest(app);
 
 const Blog = require('../models/blog');
 
+// setting up the initial blogs
 beforeEach(async () => {
   await Blog.deleteMany({});
 
-  let blogObject = new Blog(initialBlogs[0]);
+  let blogObject = new Blog(helper.initialBlogs[0]);
   await blogObject.save();
 
   blogObject = new Blog(initialBlogs[1]);
@@ -57,18 +58,21 @@ test('a valid blog can be added', async () => {
   expect(titles).toContain('3rd one');
 });
 
-// WONT WORK SINCE THE FUNCTION IS FULLY COMPLETE YET
-// test('note without content is not added', async () => {
-//   const newBlog = {
-//     author: 'another one',
-//   };
-//
-//   await api.post('/api/blogs').send(newBlog).expect(400);
-//
-//   const res = await api.get('/api/blogs');
-//
-//   expect(res.body).toHaveLength(initialBlogs.length);
-// });
+test('a specific note can be viewed', async () => {
+  const blogsAtStart = await helper.blogsInDb();
+
+  const blogToView = blogsAtStart[0];
+
+  const resultBlog = await api
+    .get(`/api/blogs/${blogToView.id}`)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  const processedBlogToView = JSON.parse(JSON.stringify(blogToView));
+
+  expect(resultBlog.body).toEqual(processedBlogToView);
+});
+
 
 afterAll(() => {
   mongoose.connection.close();
