@@ -13,7 +13,7 @@ beforeEach(async () => {
   let blogObject = new Blog(helper.initialBlogs[0]);
   await blogObject.save();
 
-  blogObject = new Blog(initialBlogs[1]);
+  blogObject = new Blog(helper.initialBlogs[1]);
   await blogObject.save();
 });
 
@@ -61,6 +61,8 @@ test('a valid blog can be added', async () => {
 test('a specific note can be viewed', async () => {
   const blogsAtStart = await helper.blogsInDb();
 
+  console.log(blogsAtStart)
+
   const blogToView = blogsAtStart[0];
 
   const resultBlog = await api
@@ -72,7 +74,6 @@ test('a specific note can be viewed', async () => {
 
   expect(resultBlog.body).toEqual(processedBlogToView);
 });
-
 
 afterAll(() => {
   mongoose.connection.close();

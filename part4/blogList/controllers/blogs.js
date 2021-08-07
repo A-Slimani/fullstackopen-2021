@@ -12,6 +12,18 @@ blogRouter.get('/', async (req, res) => {
   res.json(blogs);
 });
 
+blogRouter.get('/api/blogs/:id', async (req, res, next) => {
+  // Blog.findById(req.params.id).then(blog => {
+  //   blog ? res.json(blog) : res.status(404).end();
+  // });
+  try {
+    const blog = await Blog.findById(req.params.id);
+    res.json(blog);
+  } catch (execption) {
+    res.status(404).end()
+  }
+});
+
 blogRouter.post('/api/blogs', async (req, res, next) => {
   const blog = new Blog(req.body);
   try {
