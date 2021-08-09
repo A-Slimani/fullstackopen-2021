@@ -4,6 +4,7 @@ const app = express();
 const cors = require('cors');
 const blogRouter = require('./controllers/blogs');
 const config = require('./utils/config')
+require('express-async-errors')
 
 app.use(cors());
 app.use(express.json());

@@ -5,16 +5,14 @@ const helper = require('./test_helper');
 const api = supertest(app);
 
 const Blog = require('../models/blog');
+const { application } = require('express');
 
 // setting up the initial blogs
 beforeEach(async () => {
   await Blog.deleteMany({});
-
-  let blogObject = new Blog(helper.initialBlogs[0]);
-  await blogObject.save();
-
-  blogObject = new Blog(helper.initialBlogs[1]);
-  await blogObject.save();
+  const blogObjects = helper.initialBlogs.map(blog => new Blog(blog));
+  const promiseArray = blogObjects.map(blog => blog.save());
+  await Promise.all(promiseArray);
 });
 
 test('blogs returned as json', async () => {
@@ -71,6 +69,16 @@ test('a specific note can be viewed', async () => {
   const processedBlogToView = JSON.parse(JSON.stringify(blogToView));
 
   expect(resultBlog.body).toEqual(processedBlogToView);
+});
+
+test('a specific blog can be removed', async () => {
+  const blogList = await helper.blogsInDb();
+
+  await api
+    .delete(`/api/blogs/${blogList[0]._id}`)
+    .expect(204)
+
+  expect(blogList).toHaveLength(helper.initialBlogs.length - 1);
 });
 
 afterAll(() => {

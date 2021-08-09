@@ -13,6 +13,12 @@ const initialBlogs = [
     url: 'nsecond.org',
     likes: 44,
   },
+  {
+    title: 'third one',
+    author: 'Aboud',
+    url: 'theThirdBlog.org',
+    likes: 11,
+  },
 ];
 
 const nonExistingId = async () => {
