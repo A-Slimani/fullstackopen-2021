@@ -35,6 +35,7 @@ test('a specific blog is within the returned blog', async () => {
   expect(titles).toContain('second one');
 });
 
+// new set of tests
 test('a valid blog can be added', async () => {
   const newBlog = {
     title: '3rd one',
@@ -72,11 +73,9 @@ test('a specific note can be viewed', async () => {
 });
 
 test('a specific blog can be removed', async () => {
-  const blogList = await helper.blogsInDb();
-
-  await api
-    .delete(`/api/blogs/${blogList[0]._id}`)
-    .expect(204)
+  let blogList = await helper.blogsInDb();
+  await api.delete(`/api/blogs/${blogList[0]._id}`).expect(204);
+  blogList = await helper.blogsInDb();
 
   expect(blogList).toHaveLength(helper.initialBlogs.length - 1);
 });
