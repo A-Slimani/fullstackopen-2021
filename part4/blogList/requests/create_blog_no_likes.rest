@@ -1,0 +1,8 @@
+POST http://localhost:3003/api/blogs
+content-Type: application/json
+
+{
+	"title": "missing likes BLOG",
+	"author": "miss ing",
+	"url" : "MISSING.url"
+}

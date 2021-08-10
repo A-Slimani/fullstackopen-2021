@@ -21,19 +21,36 @@ const initialBlogs = [
   },
 ];
 
-const nonExistingId = async () => {
+const newBlog = async () => {
   const blog = new Blog({
-    title: 'toBeRemoved',
-    author: 'me',
-    url: 'something.org',
-    likes: 30,
+    title: 'new test blog',
+    author: 'aboud',
+    url: 'NEWTESTBLOg.org',
+    likes: 100,
   });
 
-  await blog.save();
-  await blog.remove();
-
-  return blog._id.toString();
+  return blog.toJSON();
 };
+
+const nonExistingLikes = async () => {
+  const blog = new Blog({
+    title: 'No Likes',
+    author: 'me',
+    url: 'NoLikes.org',
+  });
+
+  return blog.toJSON();
+};
+
+const blogWithNoUrl = async () => {
+  const blog = new Blog({
+    title: "no URL",
+    author: "KOS",
+    likes: 22
+  })
+
+  return blog.toJSON();
+}
 
 const blogsInDb = async () => {
   const blogs = await Blog.find({});
@@ -42,6 +59,8 @@ const blogsInDb = async () => {
 
 module.exports = {
   initialBlogs,
-  nonExistingId,
+  newBlog,
+  nonExistingLikes,
+  blogWithNoUrl,
   blogsInDb,
 };

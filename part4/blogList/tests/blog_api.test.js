@@ -36,28 +36,7 @@ test('a specific blog is within the returned blog', async () => {
 });
 
 // new set of tests
-test('a valid blog can be added', async () => {
-  const newBlog = {
-    title: '3rd one',
-    author: 'aboud',
-    url: 'aboudsblogs.org',
-    likes: 100,
-  };
-
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(200)
-    .expect('Content-Type', /application\/json/);
-
-  const blogsAtEnd = await helper.blogsInDb();
-  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
-
-  const titles = blogsAtEnd.map(r => r.title);
-  expect(titles).toContain('3rd one');
-});
-
-test('a specific note can be viewed', async () => {
+test('a single note can be viewed', async () => {
   const blogsAtStart = await helper.blogsInDb();
 
   const blogToView = blogsAtStart[0];
@@ -72,7 +51,7 @@ test('a specific note can be viewed', async () => {
   expect(resultBlog.body).toEqual(processedBlogToView);
 });
 
-test('a specific blog can be removed', async () => {
+test('a single blog can be removed', async () => {
   let blogList = await helper.blogsInDb();
 
   await api.delete(`/api/blogs/${blogList[0].id}`).expect(204);
@@ -80,20 +59,73 @@ test('a specific blog can be removed', async () => {
 
   expect(blogList).toHaveLength(helper.initialBlogs.length - 1);
 
-  const newBlog = {
-    title: 'another blog',
-    author: 'aboud',
-    url: 'aboudsblogs.org',
-    likes: 100,
-  };
+  // not sure why this is here?
+  //  was it to ensure that a new blog will always be added?
+  //  doesnt seem like it is needed... will leave it alone
+  //  for now tho...
 
-  await api.post('/api/blogs').send(newBlog);
+  // const newBlog = {
+  //   title: 'another blog',
+  //   author: 'aboud',
+  //   url: 'aboudsblogs.org',
+  //   likes: 98,
+  // };
+
+  // console.log(blogList);
+
+  // await api.post('/api/blogs').send(newBlog);
 });
 
 test('all blog posts have an unique identifer', async () => {
   let blogList = await helper.blogsInDb();
-
   expect(blogList).toBeDefined();
+});
+
+describe('ADDING NEW BLOGS', () => {
+  test('a valid blog can be added', async () => {
+    const newBlog = await helper.newBlog();
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+    const titles = blogsAtEnd.map(b => b.title);
+    expect(titles).toContain('new test blog');
+  });
+
+  test('creating a new blog without likes defaults to zero', async () => {
+    let blogWithoutLikes = await helper.nonExistingLikes();
+
+    await api
+      .post('/api/blogs')
+      .send(blogWithoutLikes)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+    const titles = blogsAtEnd.map(b => b.title);
+    expect(titles).toContain('No Likes');
+  });
+
+  test('creating a new blog without url will return a 400 bad request', async () => {
+    let blogWithNoUrl = await helper.blogWithNoUrl();
+
+    await api
+      .post('/api/blogs')
+      .send(blogWithNoUrl)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+  });
 });
 
 afterAll(() => {
