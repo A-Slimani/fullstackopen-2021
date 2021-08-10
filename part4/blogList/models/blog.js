@@ -19,5 +19,14 @@ const blogSchema = new mongoose.Schema({
   likes: Number,
 });
 
+// modifying the id naming scheme??
+blogSchema.set('toJSON', {
+  transform: (document, obj) => {
+    obj.id = obj._id.toString();
+    delete obj._id;
+    delete obj.__v;
+  },
+});
+
 // accessing and exporting the model
 module.exports = mongoose.model('Blog', blogSchema);

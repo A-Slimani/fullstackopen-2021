@@ -63,7 +63,7 @@ test('a specific note can be viewed', async () => {
   const blogToView = blogsAtStart[0];
 
   const resultBlog = await api
-    .get(`/api/blogs/${blogToView._id}`)
+    .get(`/api/blogs/${blogToView.id}`)
     .expect(200)
     .expect('Content-Type', /application\/json/);
 
@@ -74,10 +74,26 @@ test('a specific note can be viewed', async () => {
 
 test('a specific blog can be removed', async () => {
   let blogList = await helper.blogsInDb();
-  await api.delete(`/api/blogs/${blogList[0]._id}`).expect(204);
+
+  await api.delete(`/api/blogs/${blogList[0].id}`).expect(204);
   blogList = await helper.blogsInDb();
 
   expect(blogList).toHaveLength(helper.initialBlogs.length - 1);
+
+  const newBlog = {
+    title: 'another blog',
+    author: 'aboud',
+    url: 'aboudsblogs.org',
+    likes: 100,
+  };
+
+  await api.post('/api/blogs').send(newBlog);
+});
+
+test('all blog posts have an unique identifer', async () => {
+  let blogList = await helper.blogsInDb();
+
+  expect(blogList).toBeDefined();
 });
 
 afterAll(() => {
