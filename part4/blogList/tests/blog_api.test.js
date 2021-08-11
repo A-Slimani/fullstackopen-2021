@@ -15,73 +15,52 @@ beforeEach(async () => {
   await Promise.all(promiseArray);
 });
 
-test('blogs returned as json', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/);
-});
-
-test('all blogs are returned', async () => {
-  const res = await api.get('/api/blogs');
-
-  expect(res.body).toHaveLength(helper.initialBlogs.length);
-});
-
-test('a specific blog is within the returned blog', async () => {
-  const res = await api.get('/api/blogs');
-
-  const titles = res.body.map(r => r.title);
-  expect(titles).toContain('second one');
-});
-
 // new set of tests
-test('a single note can be viewed', async () => {
-  const blogsAtStart = await helper.blogsInDb();
+describe('When there are initially some notes saved', () => {
+  test('blogs returned as json', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+  });
 
-  const blogToView = blogsAtStart[0];
+  test('all blogs are returned', async () => {
+    const res = await api.get('/api/blogs');
 
-  const resultBlog = await api
-    .get(`/api/blogs/${blogToView.id}`)
-    .expect(200)
-    .expect('Content-Type', /application\/json/);
+    expect(res.body).toHaveLength(helper.initialBlogs.length);
+  });
 
-  const processedBlogToView = JSON.parse(JSON.stringify(blogToView));
+  test('a specific blog is within the returned blog', async () => {
+    const res = await api.get('/api/blogs');
 
-  expect(resultBlog.body).toEqual(processedBlogToView);
+    const titles = res.body.map(r => r.title);
+    expect(titles).toContain('second one');
+  });
 });
 
-test('a single blog can be removed', async () => {
-  let blogList = await helper.blogsInDb();
+describe('Viewing a specific Blogs', () => {
+  test('a single blog can be viewed', async () => {
+    const blogsAtStart = await helper.blogsInDb();
 
-  await api.delete(`/api/blogs/${blogList[0].id}`).expect(204);
-  blogList = await helper.blogsInDb();
+    const blogToView = blogsAtStart[0];
 
-  expect(blogList).toHaveLength(helper.initialBlogs.length - 1);
+    const resultBlog = await api
+      .get(`/api/blogs/${blogToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
 
-  // not sure why this is here?
-  //  was it to ensure that a new blog will always be added?
-  //  doesnt seem like it is needed... will leave it alone
-  //  for now tho...
+    const processedBlogToView = JSON.parse(JSON.stringify(blogToView));
 
-  // const newBlog = {
-  //   title: 'another blog',
-  //   author: 'aboud',
-  //   url: 'aboudsblogs.org',
-  //   likes: 98,
-  // };
+    expect(resultBlog.body).toEqual(processedBlogToView);
+  });
 
-  // console.log(blogList);
-
-  // await api.post('/api/blogs').send(newBlog);
+  test('all blog posts have an unique identifer', async () => {
+    let blogList = await helper.blogsInDb();
+    expect(blogList).toBeDefined();
+  });
 });
 
-test('all blog posts have an unique identifer', async () => {
-  let blogList = await helper.blogsInDb();
-  expect(blogList).toBeDefined();
-});
-
-describe('ADDING NEW BLOGS', () => {
+describe('Adding new blogs', () => {
   test('a valid blog can be added', async () => {
     const newBlog = await helper.newBlog();
 
@@ -125,6 +104,17 @@ describe('ADDING NEW BLOGS', () => {
 
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+  });
+});
+
+describe('deletion of a blog', () => {
+  test('a single blog can be removed', async () => {
+    let blogList = await helper.blogsInDb();
+
+    await api.delete(`/api/blogs/${blogList[0].id}`).expect(204);
+    blogList = await helper.blogsInDb();
+
+    expect(blogList).toHaveLength(helper.initialBlogs.length - 1);
   });
 });
 
